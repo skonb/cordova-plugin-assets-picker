@@ -2,7 +2,7 @@
     "version": "1.0.0-beta",
     "description": "Keychain Plugin for Apache Cordova",
     "cordova": {
-        "id": "cordova-plugin-assets-picker",
+        "id": "com.michael.cordova.plugin.assets-picker",
         "platforms": [
             "ios"
         ]
