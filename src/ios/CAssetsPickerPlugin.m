@@ -26,10 +26,10 @@
 - (void)getPicture:(CDVInvokedUrlCommand *)command
 {
     // Set the hasPendingOperation field to prevent the webview from crashing
-	self.hasPendingOperation = YES;
+    self.hasPendingOperation = YES;
     
-	// Save the CDVInvokedUrlCommand as a property.  We will need it later.
-	self.latestCommand = command;
+    // Save the CDVInvokedUrlCommand as a property.  We will need it later.
+    self.latestCommand = command;
     
     self.picker = [[CTAssetsPickerController alloc] init];
     self.picker.assetsFilter         = [ALAssetsFilter allAssets];
@@ -46,9 +46,9 @@
     // set selected assets
     NSArray *selectedAssetObjs = [_overlays objectForKey:kPreviousSelectedName];
     if (selectedAssetObjs != nil)
-        self.picker.selectedAssetObjs = [[NSMutableArray alloc] initWithArray:selectedAssetObjs];
+    self.picker.selectedAssetObjs = [[NSMutableArray alloc] initWithArray:selectedAssetObjs];
     else
-        self.picker.selectedAssetObjs  = [[NSMutableArray alloc] init];
+    self.picker.selectedAssetObjs  = [[NSMutableArray alloc] init];
     
     // iPad
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
@@ -76,8 +76,8 @@
         // get id
         NSString *url = [command.arguments objectAtIndex:0];
         if (url != nil)
-            _assetURL = [NSURL URLWithString:url];
-
+        _assetURL = [NSURL URLWithString:url];
+        
         // get options
         NSDictionary *jsonData = [command.arguments objectAtIndex:1];
         [self getOptions:jsonData];
@@ -96,8 +96,7 @@
         NSDictionary *retValues = [self objectFromAsset:asset fromThumbnail:NO];
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:retValues];
-        resultJS = [pluginResult toSuccessCallbackString:command.callbackId];
-        [self writeJavascript:resultJS];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         
         //
     } failureBlock:^(NSError *error) {
@@ -110,8 +109,7 @@
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
         
-        resultJS = [pluginResult toErrorCallbackString:command.callbackId];
-        [self writeJavascript:resultJS];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         
     }];
 }
@@ -134,11 +132,11 @@
 - (void)getOptions: (NSDictionary *)jsonData
 {
     // get parameters from argument.
- 
+    
     // quaility
     NSString *obj = [jsonData objectForKey:kQualityKey];
     if (obj != nil)
-        _quality = [obj intValue];
+    _quality = [obj intValue];
     
     // destination type
     obj = [jsonData objectForKey:kDestinationTypeKey];
@@ -181,11 +179,11 @@
             NSArray *value = [overlay objectForKey:key];
             // for debug
             /*
-            for (int j = 0; j < [value count]; j++)
-            {
-                NSString *url = [value objectAtIndex:j];
-                url = url;
-            }
+             for (int j = 0; j < [value count]; j++)
+             {
+             NSString *url = [value objectAtIndex:j];
+             url = url;
+             }
              */
             [_overlays setValue:value forKey:key];
         }
@@ -207,9 +205,9 @@
         
         UIImage *image = nil;
         if (fromThumbnail)
-            image = [UIImage imageWithCGImage:asset.thumbnail];
+        image = [UIImage imageWithCGImage:asset.thumbnail];
         else
-            image = [UIImage imageWithCGImage:asset.defaultRepresentation.fullResolutionImage];
+        image = [UIImage imageWithCGImage:asset.defaultRepresentation.fullResolutionImage];
         
         if (_targetWidth <= 0 && _targetHeight <= 0)
         {
@@ -319,12 +317,12 @@
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets
 {
     if (self.popover != nil)
-        [self.popover dismissPopoverAnimated:YES];
+    [self.popover dismissPopoverAnimated:YES];
     else
-        [picker.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    [picker.presentingViewController dismissViewControllerAnimated:YES completion:nil];
     
     // Unset the self.hasPendingOperation property
-	self.hasPendingOperation = NO;
+    self.hasPendingOperation = NO;
     
     CDVPluginResult *pluginResult = nil;
     NSString *resultJS = nil;
@@ -340,8 +338,7 @@
     }
     
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:retArray];
-    resultJS = [pluginResult toSuccessCallbackString:self.latestCommand.callbackId];
-    [self writeJavascript:resultJS];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.latestCommand.callbackId];
 }
 
 
@@ -353,15 +350,14 @@
 - (void)assetsPickerControllerDidCancel:(CTAssetsPickerController *)picker
 {
     // Unset the self.hasPendingOperation property
-	self.hasPendingOperation = NO;
-
+    self.hasPendingOperation = NO;
+    
     
     CDVPluginResult *pluginResult = nil;
     NSString *resultJS = nil;
     
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Canceled!"];
-    resultJS = [pluginResult toErrorCallbackString:self.latestCommand.callbackId];
-    [self writeJavascript:resultJS];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.latestCommand.callbackId];
 }
 
 - (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldEnableAssetForSelection:(ALAsset *)asset
@@ -383,17 +379,17 @@
 - (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset
 {
     /*
-    if (picker.selectedAssets.count >= 10)
-    {
-        UIAlertView *alertView =
-        [[UIAlertView alloc] initWithTitle:@"Attention"
-                                   message:@"Please select not more than 10 assets"
-                                  delegate:nil
-                         cancelButtonTitle:nil
-                         otherButtonTitles:@"OK", nil];
-        
-        [alertView show];
-    }
+     if (picker.selectedAssets.count >= 10)
+     {
+     UIAlertView *alertView =
+     [[UIAlertView alloc] initWithTitle:@"Attention"
+     message:@"Please select not more than 10 assets"
+     delegate:nil
+     cancelButtonTitle:nil
+     otherButtonTitles:@"OK", nil];
+     
+     [alertView show];
+     }
      */
     
     if (!asset.defaultRepresentation)
@@ -410,7 +406,7 @@
     
     //return (picker.selectedAssets.count < 10 && asset.defaultRepresentation != nil);
     return (asset.defaultRepresentation != nil);
-     
+    
     return YES;
 }
 
@@ -445,3 +441,4 @@
 
 
 @end
+
