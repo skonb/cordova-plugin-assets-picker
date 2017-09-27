@@ -50,18 +50,9 @@
     else
     self.picker.selectedAssetObjs  = [[NSMutableArray alloc] init];
     
-    // iPad
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-        self.popover = [[UIPopoverController alloc] initWithContentViewController:self.picker];
-        self.popover.delegate = self;
-        
-        [self.popover presentPopoverFromRect:self.viewController.view.frame inView:self.viewController.view permittedArrowDirections:UIPopoverArrowDirectionUnknown animated:YES];
-    }
-    else
-    {
-        [self.viewController presentViewController:self.picker animated:YES completion:nil];
-    }
+
+    [self.viewController presentViewController:self.picker animated:YES completion:nil];
+
 }
 
 - (void)getById:(CDVInvokedUrlCommand *)command
